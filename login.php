@@ -14,12 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $row = $result->fetch_assoc();
         $_SESSION['user_id'] = $row['id'];
         $_SESSION['user_role'] = $row['role']; // Lưu vai trò của người dùng vào phiên làm việc
-
-        if ($row['role'] == 1) {
-            header("Location: manager.php");
-        } else {
-            header("Location: user.php?uID=" . $row['id']);
-        }
+        header("Location: user.php?uID=" . $row['id']);
     } else {
         echo "Thông tin đăng nhập không đúng.";
     }
@@ -41,4 +36,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 </body>
 </html>
-?>
+

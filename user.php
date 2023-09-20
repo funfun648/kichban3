@@ -50,6 +50,11 @@ if ($result->num_rows == 1) {
     }
 
     echo "</ul>";
+
+    // Kiểm tra xem người dùng có quyền xem trang quản trị  role là 1
+    if ($user_info['role'] == 1) {
+        echo "<a href='manager.php'>Trang quản trị</a><br>";
+    }
 } else {
     echo "Không tìm thấy người dùng.";
 }
@@ -72,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Bạn không đủ tiền để mua sản phẩm này.";
     }
 }
+
 ?>
 
 <!DOCTYPE html>

@@ -2,10 +2,6 @@
 session_start();
 include('conn2.php');
 
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== '1') {
-    header("Location: login.php");
-    exit;
-}
 // Xử lý khi có yêu cầu POST để thêm sản phẩm mới
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_name = $_POST['product_name'];
