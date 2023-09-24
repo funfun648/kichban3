@@ -13,17 +13,31 @@
     session_start();
     require('conn2.php');
 
+   if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    header('Location: login.php');
+    exit();
+}
+    if (!isset($_GET['uID'])) {
+        echo "lỗi không thể tìm thấy người dùng";
+        echo "<a href='login.php'>Quay lại trang đăng nhập</a>";
+        exit();
+    }
     // Lấy giá trị uID từ URL
     $uID = $_GET['uID'];
 
-    // Truy vấn cơ sở dữ liệu để lấy thông tin của người dùng dựa trên $uID
     $query = "SELECT * FROM users WHERE id = $uID";
     $result = $conn->query($query);
-
+    
     if ($result->num_rows == 1) {
         $user_info = $result->fetch_assoc();
         $user_id = $user_info['id'];
         $user_balance = $user_info['sotien'];
+        
+        // Phòng thủ : Kiểm tra xem người dùng có quyền truy cập vào ID này không
+        // if ($user_id != $_SESSION['user_id']) {
+        //     echo "Bạn không có quyền truy cập vào ID này.";
+        //     exit();
+        // }
 
         echo "<strong>Tên người dùng: </strong>" . $user_info['username'] . "<br>";
         echo "<strong>Số dư tài khoản của bạn: </strong>" . $user_balance . "<br>";
@@ -80,8 +94,14 @@
         if ($user_balance >= $product_price) {
             $new_balance = $user_balance - $product_price;
             $update_query = "UPDATE users SET sotien = $new_balance WHERE id = $user_id";
-            $conn->query($update_query);
-            echo "Mua hàng thành công";
+            
+            if ($conn->query($update_query) === TRUE) {
+                // Cập nhật thành công, cập nhật lại biến $user_balance
+                $user_balance = $new_balance;
+                echo "<script>alert('Mua hàng thành công')</script>";
+            } else {
+                echo "Lỗi khi cập nhật số dư: " . $conn->error;
+            }
         } else {
             echo "Bạn không đủ tiền để mua sản phẩm này.";
         }

@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
+        $_SESSION['logged_in'] = true;
         $_SESSION['user_id'] = $row['id'];
         $_SESSION['user_role'] = $row['role']; // Lưu vai trò của người dùng vào phiên làm việc
         header("Location: user.php?uID=" . $row['id']);
